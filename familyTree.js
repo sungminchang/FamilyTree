@@ -3,22 +3,30 @@ var FamilyTree = function(name) {
   this.children = [];
 };
 
+/////////// Basic Tree Functionality ///////////////
+
 FamilyTree.prototype.addChild = function(tree) {
   this.children.push(tree);
 };
 
-FamilyTree.prototype.traverse = function(cb) {
-  cb(this)  
-  
-  this.children.forEach(function(child, i, arr) {
-    child.traverse(cb);
+FamilyTree.prototype.traverse = function(cb, i, arr) {
+  var result = cb(this, i, arr);  
+
+  if (result) { return result; }
+
+  var found = this.children.some(function(child, i, arr) {
+    var childResult = child.traverse(cb, i, arr);
+    console.log(child.name, childResult)
+    return childResult;
   });
+
+  if (found) { return found; }
+
+  return result;
 };
 
 FamilyTree.prototype.reduce = function(iterator, init) {
-  if (init === undefined) {
-    init = iterator(this.children[0], 0, this.children);
-  }
+  if (init === undefined) { init = iterator(this.children[0], 0, this.children); }
 
   this.traverse(function(child, i, arr) {
     init = iterator(init, child, i, arr);
@@ -28,13 +36,21 @@ FamilyTree.prototype.reduce = function(iterator, init) {
 };
  
 FamilyTree.prototype.find = function(name) {
-  return this.reduce(function(result, curr, i, arr) {
-    if (curr.name === name) {
-      result = curr.name;
-    }
-    return result;
-  }, null);
+  var result;
+
+  this.traverse(function(child, i, arr) {
+    if (child.name === name) {
+      result = child.name;
+      return true;
+    }    
+    return false;
+  });
+
+  return result;
 };
+
+
+/////////// Extra Functionality ////////////////////
 
 FamilyTree.prototype.findLoneChildren = function() {
   return this.reduce(function(result, curr, i, arr) {
@@ -54,7 +70,6 @@ FamilyTree.prototype.findChildlessPeople = function() {
   }, []);
 };
 
-
 FamilyTree.prototype.countGrandchildren = function() {
   var result = 0;
   var length = this.children.length;
@@ -62,9 +77,7 @@ FamilyTree.prototype.countGrandchildren = function() {
   for (var i = 0; i < length; i++) {
     var child = this.children[i];
     if (child.children.length > 0) {
-      child.children.forEach(function(grandChild, i, arr) {
-        result++;
-      });
+      result = child.children.length;
     }
   }
 
@@ -77,7 +90,6 @@ FamilyTree.prototype.findBusiestGrandparent = function() {
 
   this.traverse(function(child, i, arr) {
     var currCount = child.countGrandchildren();
-    console.log(child.name, currCount)
     if (currCount > mostGrandChildrenYet) {
       busiest = child;
       mostGrandChildrenYet = currCount;
@@ -88,23 +100,15 @@ FamilyTree.prototype.findBusiestGrandparent = function() {
 };
 
 FamilyTree.prototype.findGrandparent = function(grandchild, ancestors) {
-  if (ancestors === undefined) {
-    ancestors = []; // [parent, grandparent];
-  }
+  if (ancestors === undefined) { ancestors = []; }
 
-  if (this.name === grandchild) {
-    return ancestors[1];
-  }
+  if (this.name === grandchild) { return ancestors[1]; }
 
   var length = this.children.length;
   
-  if (!length) {
-    return;
-  }
+  if (!length) { return; }
 
-  if (ancestors.length > 1) {
-    ancestors.pop();
-  }
+  if (ancestors.length > 1) { ancestors.pop(); }
 
   ancestors.unshift(this.name);
 
