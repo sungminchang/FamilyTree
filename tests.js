@@ -2,6 +2,8 @@ var expect = chai.expect;
 var should = chai.should();
 var assert = chai.assert;
 
+var tree = new FamilyTree();
+
 var mandy = new FamilyTree('Mandy');
 var nara = new FamilyTree('Nara');
 var natalie = new FamilyTree('Natalie');
@@ -15,6 +17,7 @@ var raymond = new FamilyTree('Raymond');
 var ridley = new FamilyTree('Ridley');
 
 
+tree.addChild(mandy);
 
 mandy.addChild(natalie);
 mandy.addChild(nara);
@@ -31,50 +34,73 @@ patrick.addChild(raymond);
 
 roger.addChild(ridley);
 
+
 describe('the family tree data structure', function() {
 
   describe('basic tree functionality', function() {
 
     it('should allow you to set the name', function() {
-      expect(mandy.name).to.equal('Mandy');
+      expect(tree.children[0].name).to.equal('Mandy');
     });
 
     it('should maintain a collection of children', function() {
-      mandy.children.should.be.a('array');
+      tree.children.should.be.a('array');
     });
 
     it('should allow you to add children', function() {
-      assert(mandy.children.length === 2, 'added two children');
+      expect(tree.children.length).to.equal(1);
     });
 
     it('should let you find a child', function() {
-      expect(mandy.find('Nara')).to.equal('Nara');
+      expect(tree.find('Nara')).to.equal('Nara');
     });
 
     it('should let you traverse a nodes entire progeny', function() {
       var result = [];
       var identity = function(a) {result.push(a.name)};
-      mandy.traverse(function(node) {identity(node)});
+      tree.traverse(function(node) {identity(node)});
+      console.log(result);
       expect(result.length).to.equal(11);
 
-      expect(mandy.find('Oliver')).to.equal('Oliver');
-      expect(mandy.find('Harold')).to.equal(null);
+      expect(tree.find('Oliver')).to.equal('Oliver');
+      expect(tree.find('Harold')).to.equal(null);
     });
 
   });
 
   describe('extra functionality', function() { 
     it('should let you find people with no siblings', function() {
-      assert.deepEqual(mandy.findLoneChildren(), ['Mandy', 'Patrick', 'Ridley']);
+      assert.deepEqual(tree.findLoneChildren(), ['Mandy', 'Patrick', 'Ridley']);
     });
 
     it('should let you find people with no children', function() {
-      assert.deepEqual(mandy.findChildlessPeople(), ['Robert', 'Ridley', 'Rick', 'Raymond', 'Oliver', 'Oscar']);
+      assert.deepEqual(tree.findChildlessPeople(), ['Robert', 'Ridley', 'Rick', 'Raymond', 'Oliver', 'Oscar']);
     });
 
-    it('should let you find the person with the most number of grandchilren', function() {
-      expect(mandy.findBusiestGrandparent()).to.equal('Natalie');
+    it('should let you find the person with the most number of grandchildren', function() {
+      expect(tree.findBusiestGrandparent()).to.equal('Natalie');
     });
+
+
+  });
+
+  describe('finding person\'s grandparent', function() {
+    it('should let you find a person\'s grandparent', function() {
+      expect(tree.findGrandparent('Patrick')).to.equal('Mandy');
+    });
+    
+    it('should let you find a person\'s grandparent', function() {
+      expect(tree.findGrandparent('Ridley')).to.equal('Patrick');
+    });
+
+    it('should send back an error message if a person doesn\'t have a grandparent', function() {
+      expect(tree.findGrandparent('Natalie')).to.equal('Grandparent not found');
+    });
+
+    it('should send back an error message if a person doesn\'t have a grandparent', function() {
+      expect(tree.findGrandparent('Mandy')).to.equal('Grandparent not found');
+    });
+
 
   });
 

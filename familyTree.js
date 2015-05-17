@@ -1,23 +1,29 @@
 var FamilyTree = function(name) {
+  if (name === undefined) {
+    this.root = true;
+  }
+  this.parent;
   this.name = name;
   this.children = [];
 };
 
 FamilyTree.prototype.addChild = function(tree) {
   this.children.push(tree);
+  tree.parent = this;
 };
 
-FamilyTree.prototype.traverse = function(cb, root) {
-  cb(this)
+FamilyTree.prototype.traverse = function(cb) {
+  if (!this.root) {
+    cb(this)  
+  }
 
   if (this.children) {
     this.children.forEach(function(child, i, arr) {
-      child.traverse(cb, root);
+      child.traverse(cb);
     });
   } else {
     return null;
   }
-
 };
 
 FamilyTree.prototype.find = function(name) {
@@ -35,13 +41,14 @@ FamilyTree.prototype.find = function(name) {
   }
 
   return null;
-
 };
 
 FamilyTree.prototype.findLoneChildren = function() {
   var result = [];
 
-  result.push(this.name);
+  if (this.children.length === 1) {
+    result.push(this.children[0].name);
+  }
 
   this.traverse(function(child, i, arr) {
     if (child.children.length === 1) {
@@ -50,7 +57,6 @@ FamilyTree.prototype.findLoneChildren = function() {
   });
 
   return result;
-  // if (this)
 };
 
 FamilyTree.prototype.findChildlessPeople = function() {
@@ -68,7 +74,6 @@ FamilyTree.prototype.findChildlessPeople = function() {
 
   return result;
 };
-
 
 FamilyTree.prototype.findBusiestGrandparent = function() {
   var busiest = this;
@@ -95,8 +100,27 @@ FamilyTree.prototype.findBusiestGrandparent = function() {
       busiest = child;
       mostGrandChildrenYet = currCount;
     };
-
   });
 
   return busiest.name;
+};
+
+
+FamilyTree.prototype.findGrandparent = function(grandchild) {
+  var result;
+  this.traverse(function(child, i, arr) {
+    if (child.name === grandchild) {
+      var grandparent = child.parent.parent;
+      if (grandparent && grandparent.hasOwnProperty('name')) {
+        result = grandparent.name
+      }
+      return;
+    }
+  });
+
+  if (!result) {
+    return 'Grandparent not found';
+  } else {
+    return result;
+  }
 };
