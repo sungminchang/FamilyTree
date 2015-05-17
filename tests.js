@@ -10,6 +10,8 @@ var oscar = new FamilyTree('Oscar');
 var patrick = new FamilyTree('Patrick');
 var robert = new FamilyTree('Robert');
 var roger = new FamilyTree('Roger');
+var rick = new FamilyTree('Rick');
+var raymond = new FamilyTree('Raymond');
 var ridley = new FamilyTree('Ridley');
 
 
@@ -24,6 +26,8 @@ nara.addChild(oscar);
 
 patrick.addChild(robert);
 patrick.addChild(roger);
+patrick.addChild(rick);
+patrick.addChild(raymond);
 
 roger.addChild(ridley);
 
@@ -51,7 +55,7 @@ describe('the family tree data structure', function() {
       var result = [];
       var identity = function(a) {result.push(a.name)};
       mandy.traverse(function(node) {identity(node)});
-      expect(result.length).to.equal(9);
+      expect(result.length).to.equal(11);
 
       expect(mandy.find('Oliver')).to.equal('Oliver');
       expect(mandy.find('Harold')).to.equal(null);
@@ -65,7 +69,11 @@ describe('the family tree data structure', function() {
     });
 
     it('should let you find people with no children', function() {
-      assert.deepEqual(mandy.findChildlessPeople(), ['Robert', 'Ridley', 'Oliver', 'Oscar']);
+      assert.deepEqual(mandy.findChildlessPeople(), ['Robert', 'Ridley', 'Rick', 'Raymond', 'Oliver', 'Oscar']);
+    });
+
+    it('should let you find the person with the most number of grandchilren', function() {
+      expect(mandy.findBusiestGrandparent()).to.equal('Natalie');
     });
 
   });

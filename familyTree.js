@@ -8,19 +8,10 @@ FamilyTree.prototype.addChild = function(tree) {
 };
 
 FamilyTree.prototype.traverse = function(cb, root) {
-  if (root === undefined) {
-    root = true;
-  }
-
-  if (root) {
-    root = false;
-    cb(this);
-  }
+  cb(this)
 
   if (this.children) {
     this.children.forEach(function(child, i, arr) {
-      cb(child, i, arr);
-      
       child.traverse(cb, root);
     });
   } else {
@@ -76,4 +67,36 @@ FamilyTree.prototype.findChildlessPeople = function() {
   });
 
   return result;
+};
+
+
+FamilyTree.prototype.findBusiestGrandparent = function() {
+  var busiest = this;
+  var mostGrandChildrenYet = this.children.length;
+  // var currentGrandChildren = 0;
+
+  var countGrandchildren = function(node) {
+    var result = 0;
+
+    node.children.forEach(function(child, i, arr) {
+      if (child.children.length > 0) {
+        child.children.forEach(function(grandChild, i, arr) {
+          result++;
+        });
+      }
+    });
+
+    return result;
+  };
+
+  this.traverse(function(child, i, arr) {
+    var currCount = countGrandchildren(child);
+    if (currCount > mostGrandChildrenYet) {
+      busiest = child;
+      mostGrandChildrenYet = currCount;
+    };
+
+  });
+
+  return busiest.name;
 };
