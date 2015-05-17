@@ -1,7 +1,4 @@
 var FamilyTree = function(name) {
-  if (name === undefined) {
-    this.root = true;
-  }
   this.parent;
   this.name = name;
   this.children = [];
@@ -13,9 +10,7 @@ FamilyTree.prototype.addChild = function(tree) {
 };
 
 FamilyTree.prototype.traverse = function(cb) {
-  if (!this.root) {
-    cb(this)  
-  }
+  cb(this)  
 
   if (this.children) {
     this.children.forEach(function(child, i, arr) {
@@ -26,53 +21,43 @@ FamilyTree.prototype.traverse = function(cb) {
   }
 };
 
-FamilyTree.prototype.find = function(name) {
-  var result = [];
-
-  this.traverse(function(node) {
-    if (node.name === name) {
-      result = node.name;
-      return;
-    }
-  });
-
-  if (result.length) {
-    return result
+FamilyTree.prototype.reduce = function(iterator, init) {
+  if (init === undefined) {
+    init = iterator(this.children[0], 0, this.children);
   }
 
-  return null;
+  this.traverse(function(child, i, arr) {
+    init = iterator(init, child, i, arr);
+  });
+
+  return init;
+};
+ 
+FamilyTree.prototype.find = function(name) {
+  return this.reduce(function(result, curr, i, arr) {
+    if (curr.name === name) {
+      result = curr.name;
+    }
+    return result;
+  }, null);
 };
 
 FamilyTree.prototype.findLoneChildren = function() {
-  var result = [];
-
-  if (this.children.length === 1) {
-    result.push(this.children[0].name);
-  }
-
-  this.traverse(function(child, i, arr) {
-    if (child.children.length === 1) {
-      result.push(child.children[0].name);
+  return this.reduce(function(result, curr, i, arr) {
+    if (curr.children.length === 1) {
+      result.push(curr.children[0].name);
     }
-  });
-
-  return result;
+    return result;
+  }, [this.name]);
 };
 
 FamilyTree.prototype.findChildlessPeople = function() {
-  var result = [];
-
-  if (this.children.length === 0) {
-    result.push(this.name);
-  }
-
-  this.traverse(function(child, i, arr) {
-    if (child.children.length === 0) {
-      result.push(child.name);
+  return this.reduce(function(result, curr, i, arr) {
+    if (curr.children.length === 0) {
+      result.push(curr.name);
     }
-  });
-
-  return result;
+    return result;
+  }, []);
 };
 
 FamilyTree.prototype.findBusiestGrandparent = function() {
