@@ -11,14 +11,10 @@ FamilyTree.prototype.addChild = function(tree) {
 
 FamilyTree.prototype.traverse = function(cb) {
   cb(this)  
-
-  if (this.children) {
-    this.children.forEach(function(child, i, arr) {
-      child.traverse(cb);
-    });
-  } else {
-    return null;
-  }
+  
+  this.children.forEach(function(child, i, arr) {
+    child.traverse(cb);
+  });
 };
 
 FamilyTree.prototype.reduce = function(iterator, init) {
@@ -60,27 +56,30 @@ FamilyTree.prototype.findChildlessPeople = function() {
   }, []);
 };
 
+
+FamilyTree.prototype.countGrandchildren = function() {
+  var result = 0;
+  var length = this.children.length;
+
+  for (var i = 0; i < length; i++) {
+    var child = this.children[i];
+    if (child.children.length > 0) {
+      child.children.forEach(function(grandChild, i, arr) {
+        result++;
+      });
+    }
+  }
+
+  return result;
+};
+
 FamilyTree.prototype.findBusiestGrandparent = function() {
   var busiest = this;
   var mostGrandChildrenYet = this.children.length;
-  // var currentGrandChildren = 0;
-
-  var countGrandchildren = function(node) {
-    var result = 0;
-
-    node.children.forEach(function(child, i, arr) {
-      if (child.children.length > 0) {
-        child.children.forEach(function(grandChild, i, arr) {
-          result++;
-        });
-      }
-    });
-
-    return result;
-  };
 
   this.traverse(function(child, i, arr) {
-    var currCount = countGrandchildren(child);
+    var currCount = child.countGrandchildren();
+    console.log(child.name, currCount)
     if (currCount > mostGrandChildrenYet) {
       busiest = child;
       mostGrandChildrenYet = currCount;

@@ -74,7 +74,6 @@ describe('the family tree data structure', function() {
     });
 
     it('should let you find people with no children', function() {
-      console.log(mandy.findChildlessPeople());
       assert.deepEqual(mandy.findChildlessPeople(), ['Robert', 'Ridley', 'Rick', 'Raymond', 'Oliver', 'Oscar']);
     });
 
