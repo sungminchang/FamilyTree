@@ -98,12 +98,12 @@ describe('the family tree data structure', function() {
       expect(mandy.findGrandparent('Ridley')).to.equal('Patrick');
     });
 
-    it('should send back an error message if a person doesn\'t have a grandparent', function() {
-      expect(mandy.findGrandparent('Natalie')).to.equal('Grandparent not found');
+    it('should return undefined if a person doesn\'t have a grandparent', function() {
+      expect(mandy.findGrandparent('Natalie')).to.equal(undefined);
     });
 
-    it('should send back an error message if a person doesn\'t have a grandparent', function() {
-      expect(mandy.findGrandparent('Mandy')).to.equal('Grandparent not found');
+    it('should return undefined if a person doesn\'t have a grandparent', function() {
+      expect(mandy.findGrandparent('Mandy')).to.equal(undefined);
     });
 
   });

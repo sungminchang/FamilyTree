@@ -1,12 +1,10 @@
 var FamilyTree = function(name) {
-  this.parent;
   this.name = name;
   this.children = [];
 };
 
 FamilyTree.prototype.addChild = function(tree) {
   this.children.push(tree);
-  tree.parent = this;
 };
 
 FamilyTree.prototype.traverse = function(cb) {
@@ -89,22 +87,32 @@ FamilyTree.prototype.findBusiestGrandparent = function() {
   return busiest.name;
 };
 
+FamilyTree.prototype.findGrandparent = function(grandchild, ancestors) {
+  if (ancestors === undefined) {
+    ancestors = []; // [parent, grandparent];
+  }
 
-FamilyTree.prototype.findGrandparent = function(grandchild) {
-  var result;
-  this.traverse(function(child, i, arr) {
-    if (child.name === grandchild) {
-      var grandparent = child.parent.parent;
-      if (grandparent && grandparent.hasOwnProperty('name')) {
-        result = grandparent.name
-      }
-      return;
+  if (this.name === grandchild) {
+    return ancestors[1];
+  }
+
+  var length = this.children.length;
+  
+  if (!length) {
+    return;
+  }
+
+  if (ancestors.length > 1) {
+    ancestors.pop();
+  }
+
+  ancestors.unshift(this.name);
+
+  for (var i = 0; i < length; i++) {
+    var child = this.children[i];
+    var childResult = child.findGrandparent(grandchild, ancestors);
+    if (childResult) {
+      return childResult;
     }
-  });
-
-  if (!result) {
-    return 'Grandparent not found';
-  } else {
-    return result;
   }
 };
