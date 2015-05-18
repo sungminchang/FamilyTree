@@ -37,7 +37,7 @@ roger.addChild(ridley);
 
 describe('the family tree data structure', function() {
 
-  xdescribe('basic tree functionality', function() {
+  describe('basic tree functionality', function() {
 
     it('should allow you to set the name', function() {
       expect(mandy.children[0].name).to.equal('Natalie');
@@ -88,7 +88,7 @@ describe('the family tree data structure', function() {
 
   });
 
-  xdescribe('extra functionality', function() { 
+  describe('extra functionality', function() { 
 
     it('should let you find people with no siblings', function() {
       assert.deepEqual(mandy.findLoneChildren(), ['Mandy', 'Patrick', 'Ridley']);
@@ -111,19 +111,27 @@ describe('the family tree data structure', function() {
 
   describe('finding person\'s grandparent', function() {
 
-    xit('should let you find a person\'s grandparent', function() {
+    it('should let you find a person\'s grandparent', function() {
       expect(mandy.findGrandparent('Patrick')).to.equal('Mandy');
     });
     
     it('should let you find a person\'s grandparent', function() {
       expect(mandy.findGrandparent('Ridley')).to.equal('Patrick');
     });
+    
+    it('should let you find a person\'s grandparent', function() {
+      expect(mandy.findGrandparent('Rick')).to.equal('Natalie');
+    });
+    
+    it('should let you find a person\'s grandparent', function() {
+      expect(mandy.findGrandparent('Oscar')).to.equal('Mandy');
+    });
 
-    xit('should return undefined if a person doesn\'t have a grandparent', function() {
+    it('should return undefined if a person doesn\'t have a grandparent', function() {
       expect(mandy.findGrandparent('Natalie')).to.equal(undefined);
     });
 
-    xit('should return undefined if a person doesn\'t have a grandparent', function() {
+    it('should return undefined if a person doesn\'t have a grandparent', function() {
       expect(mandy.findGrandparent('Mandy')).to.equal(undefined);
     });
 

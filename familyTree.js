@@ -11,17 +11,15 @@ FamilyTree.prototype.addChild = function(tree) {
 
 FamilyTree.prototype.traverse = function(cb, i, arr) {
   var result = cb(this, i, arr);  
-
   if (result) { return result; }
 
   var found = this.children.some(function(child, i, arr) {
     var childResult = child.traverse(cb, i, arr);
-    console.log(child.name, childResult)
     return childResult;
   });
 
   if (found) { return found; }
-
+  
   return result;
 };
 
@@ -108,7 +106,9 @@ FamilyTree.prototype.findGrandparent = function(grandchild, ancestors) {
   
   if (!length) { return; }
 
-  if (ancestors.length > 1) { ancestors.pop(); }
+  if (ancestors.length > 1) { 
+    var grandparent = ancestors.pop(); 
+  }
 
   ancestors.unshift(this.name);
 
@@ -119,4 +119,7 @@ FamilyTree.prototype.findGrandparent = function(grandchild, ancestors) {
       return childResult;
     }
   }
+
+  ancestors.shift();
+  ancestors.push(grandparent);
 };
