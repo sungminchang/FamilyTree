@@ -53,9 +53,6 @@ describe('the family tree data structure', function() {
 
     it('should let you find a child', function() {
       expect(mandy.find('Nara')).to.equal('Nara');
-    });
-
-    it('should let you find a child', function() {
       expect(mandy.find('Mandy')).to.equal('Mandy');
     });
 
@@ -113,25 +110,13 @@ describe('the family tree data structure', function() {
 
     it('should let you find a person\'s grandparent', function() {
       expect(mandy.findGrandparent('Patrick')).to.equal('Mandy');
-    });
-    
-    it('should let you find a person\'s grandparent', function() {
       expect(mandy.findGrandparent('Ridley')).to.equal('Patrick');
-    });
-    
-    it('should let you find a person\'s grandparent', function() {
       expect(mandy.findGrandparent('Rick')).to.equal('Natalie');
-    });
-    
-    it('should let you find a person\'s grandparent', function() {
       expect(mandy.findGrandparent('Oscar')).to.equal('Mandy');
     });
-
+    
     it('should return undefined if a person doesn\'t have a grandparent', function() {
       expect(mandy.findGrandparent('Natalie')).to.equal(undefined);
-    });
-
-    it('should return undefined if a person doesn\'t have a grandparent', function() {
       expect(mandy.findGrandparent('Mandy')).to.equal(undefined);
     });
 

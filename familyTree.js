@@ -19,7 +19,7 @@ FamilyTree.prototype.traverse = function(cb, i, arr) {
   });
 
   if (found) { return found; }
-  
+
   return result;
 };
 
@@ -123,3 +123,5 @@ FamilyTree.prototype.findGrandparent = function(grandchild, ancestors) {
   ancestors.shift();
   ancestors.push(grandparent);
 };
+
+
